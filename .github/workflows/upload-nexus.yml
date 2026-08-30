@@ -1,0 +1,45 @@
+name: Upload mod to NexusMods
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version string (e.g. 1.0.1)
+        required: true
+  release:
+    types: [published]
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    if: github.repository == 'guitaripod/cp2077-fov-always-120'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine version
+        id: ver
+        run: echo "version=${{ github.event.inputs.version || github.ref_name }}" >> "$GITHUB_OUTPUT"
+
+      - name: Zip mod
+        run: |
+          rm -rf FovAlways120 && mkdir FovAlways120
+          cp src/init.lua FovAlways120/
+          cp README.md LICENSE FovAlways120/
+          rm -f FovAlways120.zip
+          zip -qr FovAlways120.zip FovAlways120
+          echo "zip_name=FovAlways120.zip" >> "$GITHUB_OUTPUT"
+        id: zip
+
+      - name: Upload to NexusMods
+        uses: Nexus-Mods/upload-action@v1
+        with:
+          api_key: ${{ secrets.NEXUSMODS_API_KEY }}
+          file_id: ${{ vars.NEXUSMODS_FILE_ID }}
+          filename: FovAlways120-${{ steps.ver.outputs.version }}.zip
+          version: ${{ steps.ver.outputs.version }}
+          display_name: FovAlways120 ${{ steps.ver.outputs.version }}
+          category: main
+          update_mod_version: true
+          mod_id: ${{ vars.NEXUSMODS_MOD_ID }}
+          changelog: |
+            FovAlways120 ${{ steps.ver.outputs.version }}
