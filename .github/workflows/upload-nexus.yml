@@ -30,11 +30,18 @@ jobs:
           echo "zip_name=FovAlways120.zip" >> "$GITHUB_OUTPUT"
         id: zip
 
+      - name: Check variables
+        run: |
+          if [ -z "${{ vars.NEXUSMODS_FILE_ID }}" ]; then
+            echo "::error::Set repo variable NEXUSMODS_FILE_ID (see mod page Files tab -> API info) before uploading."
+            exit 1
+          fi
+
       - name: Upload to NexusMods
         uses: Nexus-Mods/upload-action@c96019556046053aa26044b44396cd38929daf23
         with:
           api_key: ${{ secrets.NEXUSMODS_API_KEY }}
-          file_id: ${{ vars.NEXUSMODS_FILE_ID }}
+          file_id: ${{ vars.NEXUSMODS_FILE_ID }}  # set after first manual upload
           filename: FovAlways120-${{ steps.ver.outputs.version }}.zip
           version: ${{ steps.ver.outputs.version }}
           display_name: FovAlways120 ${{ steps.ver.outputs.version }}
