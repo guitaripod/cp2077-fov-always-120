@@ -1,9 +1,5 @@
 # FovAlways120 (Cyberpunk 2077)
 
-[![Nexus Mods](https://img.shields.io/badge/NexusMods-FovAlways120-orange)](https://www.nexusmods.com/cyberpunk2077/mods/33330)
-
-
-
 Cyber Engine Tweaks mod that pins the first-person camera FOV at 120 whenever you're in gameplay — and automatically releases the lock while any menu is open, so the world map's 3D camera pans correctly.
 
 ## Why
